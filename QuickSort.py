@@ -1,58 +1,34 @@
-def quickSort(alist):
-    """
-    A method to start the quick sort algorithm
-    :param alist:
-    :return:
-    """
-    quickSortHelper(alist, 0, len(alist) - 1)
+count = 0
 
 
-def quickSortHelper(alist, first, last):
-    """
-    A recursive method used to partition the alist
-    :param alist:
-    :param first:
-    :param last:
-    :return:
-    """
-    if first < last:
-        splitpoint = partition(alist, first, last)
+def partition(arr, pivot_point, end_index):
+    x = arr[end_index]
+    i = pivot_point - 1
+    for j in xrange(pivot_point, end_index):
+        if arr[j] <= x:
+            i += 1
+            temp = arr[i]
+            arr[i] = arr[j]
+            arr[j] = temp
+    temp = arr[i + 1]
+    arr[i + 1] = arr[end_index]
+    arr[end_index] = temp
+    return i + 1
 
-        quickSortHelper(alist, first, splitpoint - 1)
-        quickSortHelper(alist, splitpoint + 1, last)
+
+def quicksort(arr, pivot_point, end_index):
+    if pivot_point < end_index:
+        q = partition(arr, pivot_point, end_index)
+        quicksort(arr, pivot_point, q - 1)
+        count += ((q-1) - pivot_point) -1
+        quicksort(arr, q + 1, end_index)
 
 
-def partition(alist, first, last):
-    """
-    A method used to sort the list at the given first and last points
-    :param alist:
-    :param first:
-    :param last:
-    :return:
-    """
-    pivotvalue = alist[first]
+def main():
+    list = [10, 4, 2, 5]
+    quicksort(list, 0, (len(list) - 1))
+    print list
 
-    leftmark = first + 1
-    rightmark = last
 
-    done = False
-    while not done:
-
-        while leftmark <= rightmark and alist[leftmark] <= pivotvalue:
-            leftmark += 1
-
-        while alist[rightmark] >= pivotvalue and rightmark >= leftmark:
-            rightmark -= 1
-
-        if rightmark < leftmark:
-            done = True
-        else:
-            temp = alist[leftmark]
-            alist[leftmark] = alist[rightmark]
-            alist[rightmark] = temp
-
-    temp = alist[first]
-    alist[first] = alist[rightmark]
-    alist[rightmark] = temp
-
-    return rightmark
+if __name__ == '__main__':
+    main()
