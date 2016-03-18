@@ -1,4 +1,4 @@
-class Sort:
+class QuickSort:
     def __init__(self, pivot_type):
         self.pivot_type = pivot_type
         self.count = 0
@@ -108,23 +108,3 @@ class Sort:
 
     def reset_pivot_type(self, new_type):
         self.pivot_type = new_type
-
-
-def main():
-    list = [10, 1, 2, 3, 4, 6, 9]
-    list2 = [10, 1, 2, 3]
-    s = Sort('first')
-    '''
-    s.quicksort_helper(list)
-    print(list)
-    s.get_count()
-    s.reset_count()
-    '''
-    s.reset_pivot_type('last')
-    s.quicksort_helper(list2)
-    print(list2)
-    s.get_count()
-
-
-if __name__ == '__main__':
-    main()
