@@ -1,5 +1,5 @@
 class QuickSort:
-    def __init__(self, pivot_type):
+    def __init__(self, pivot_type=None):
         self.pivot_type = pivot_type
         self.count = 0
 
