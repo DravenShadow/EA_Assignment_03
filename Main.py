@@ -1,6 +1,9 @@
-from Tools.scripts.treesync import raw_input
+"""
+            Author:  Rowland DePree                         Main.py
 
-import QuickSort
+            This is a program designed to validate the user input, read in a file, and do quick sort.
+"""
+from QuickSort import QuickSort
 
 
 def read_in_list(file):
@@ -21,6 +24,11 @@ def read_in_list(file):
 
 
 def validate_pivot_type(p_type):
+    """
+    Validates the user input of the pivot type
+    :param p_type:
+    :return:
+    """
     correct = False
     while not correct:
         if str.lower(p_type) == 'first':
@@ -35,15 +43,27 @@ def validate_pivot_type(p_type):
 
 
 def main():
+    """
+    Main method
+    :return:
+    """
     s = QuickSort()
-    s.reset_pivot_type('last')
-    num_list = read_in_list(raw_input('Enter in location of file: '))
+    num_list = read_in_list(input('Enter in location of file: '))
     p_type = validate_pivot_type(input('Enter in which type of pivot you want to use: '))
-    s.reset_pivot_type(p_type)
-    s.quick_sort_helper(num_list)
+    if p_type == 'first':
+        s.first_quicksort(num_list, 0, len(num_list) - 1)
+    elif p_type == 'last':
+        s.end_quicksort(num_list, 0, len(num_list) - 1)
+    else:
+        s.mid_quicksort(num_list, 0, len(num_list) - 1)
     print(num_list)
-    print("Count: " + str(s.count()))
+    print("Count: ")
+    s.get_count()
+    s.reset_count()
 
 
 if __name__ == '__main__':
+    """
+        Starts the main method
+    """
     main()

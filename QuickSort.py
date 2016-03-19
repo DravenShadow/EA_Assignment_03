@@ -1,110 +1,174 @@
+"""
+        Author: Rowland DePree                                      QuickSort.py
+
+        This is a class designed to create an QuickSort object that will then allow you to sort by either the first element
+        as the pivot, the last element as the pivot, or the middle elemnt as the pivot.  It also keeps track of the count
+        the number of comparisons.
+"""
+
 class QuickSort:
     def __init__(self, pivot_type=None):
         self.pivot_type = pivot_type
         self.count = 0
 
-    def first_partition(self, arr, left, pivot_index, right):
-        left += 1
-        pivot = arr[pivot_index]
+    def first_quicksort(self, arr, begin, end):
+        """
+        This is a method to do quick sort using the first element as the pivot.  The original form of this code is from:
+        http://interactivepython.org/runestone/static/pythonds/SortSearch/TheQuickSort.html
+        :param arr:
+        :param begin:
+        :param end:
+        :return:
+        """
+        if begin < end:
+            splitpoint = self.first_partition(arr, begin, end)
+
+            self.first_quicksort(arr, begin, splitpoint - 1)
+            self.count += ((end - begin) - 1)
+            self.first_quicksort(arr, splitpoint + 1, end)
+            self.count += ((end - begin) - 1)
+
+    def first_partition(self, arr, begin, end):
+        """
+        This is a method to partition using the first element as the pivot.  The original form of this code is from:
+        http://interactivepython.org/runestone/static/pythonds/SortSearch/TheQuickSort.html
+        :param arr:
+        :param begin:
+        :param end:
+        :return:
+        """
+        pivot = arr[begin]
+
+        left = begin + 1
+        right = end
+
         done = False
         while not done:
-            while arr[left] < pivot and left < right:
+
+            while left <= right and arr[left] <= pivot:
                 left += 1
-            while arr[right] > pivot and right > left:
+
+            while arr[right] >= pivot and right >= left:
                 right -= 1
-            if right <= left:
+
+            if right < left:
                 done = True
             else:
                 temp = arr[left]
                 arr[left] = arr[right]
                 arr[right] = temp
 
-        temp = arr[pivot_index]
-        arr[pivot_index] = arr[left]
-        arr[left] = temp
-        return left
+        temp = arr[begin]
+        arr[begin] = arr[right]
+        arr[right] = temp
 
-    def end_partition(self, arr, left, pivot_index, right):
-        right -= 1
-        pivot = arr[pivot_index]
-        done = False
+        return right
+
+    def end_partition(self, arr, begin, end):
+        """
+        A method designed to partition the list.  The original form of this code was from:
+        http://hetland.org/coding/python/quicksort.html
+        :param arr:
+        :param begin:
+        :param end:
+        :return:
+        """
+        pivot = arr[end]
+        bottom = begin - 1
+        top = end
+        done = 0
         while not done:
-            while arr[left] < pivot and left < right:
-                left += 1
-            while arr[right] > pivot and right > left:
-                right -= 1
-            if right <= left:
-                done = True
-            else:
-                temp = arr[left]
-                arr[left] = arr[right]
-                arr[right] = temp
-        temp = arr[pivot_index]
-        arr[pivot_index] = arr[left]
-        arr[left] = temp
-        return left - 1
+            while not done:
+                bottom += 1
+                if bottom == top:
+                    done = 1
+                    break
+                if arr[bottom] > pivot:
+                    arr[top] = arr[bottom]
+                    break
+            while not done:
+                top -= 1
+                if top == bottom:
+                    done = 1
+                    break
+                if arr[top] < pivot:
+                    arr[bottom] = arr[top]
+                    break
+        arr[top] = pivot
+        return top
 
-    def middle_partition(self, arr, pivot_index, right, left):
-        pivot = arr[pivot_index]
-        done = False
-        while not done:
-            while arr[left] < pivot and left < right:
-                left += 1
-            while arr[right] > pivot and right > left:
-                right -= 1
-            if right <= left:
-                done = True
-            else:
-                if left == pivot_index:
-                    pivot_index = right
-                elif right == pivot_index:
-                    pivot_index = left
-
-                temp = arr[left]
-                arr[left] = arr[right]
-                arr[right] = temp
-        return pivot_index
-
-    def quicksort(self, arr, pivot_point, end_index, left=0, len_of_arry=0):
-        if self.pivot_type == 'first':
-            if pivot_point < end_index:
-                q = self.first_partition(arr, left, pivot_point, end_index)
-                self.quicksort(arr, 0, q - 1)
-                self.quicksort(arr, q + 1, end_index)
-        elif self.pivot_type == 'last':
-            if pivot_point > left:
-                q = self.end_partition(arr, left, pivot_point, end_index)
-                self.quicksort(arr, q, q - 1)
-                self.quicksort(arr, q, end_index)
+    def end_quicksort(self, arr, begin, end):
+        """
+        A method designed to do quicksort using the last element as the pivot.  The original form of this code is from:
+        http://hetland.org/coding/python/quicksort.html
+        :param arr:
+        :param begin:
+        :param end:
+        :return:
+        """
+        if begin < end:
+            split = self.end_partition(arr, begin, end)
+            self.end_quicksort(arr, begin, split - 1)
+            self.count += ((end - begin) - 1)
+            self.end_quicksort(arr, split + 1, end)
+            self.count += ((end - begin) - 1)
         else:
-            if len_of_arry > 1:
-                q = self.middle_partition(arr, pivot_point, end_index, left)
-                if q % 2 == 0:
-                    self.quicksort(arr, (int(q / 2) - 1), q, 0, q - left)
-                else:
-                    self.quicksort(arr, int((q / 2) + 0.5), q, 0, q - left)
+            return
 
-                if (end_index - q) % 2 == 0:
-                    self.quicksort(arr, end_index - int((end_index - q) / 2), end_index, q + 1, (end_index - q))
-                else:
-                    self.quicksort(arr, end_index - int((end_index - q) // 2), end_index, q + 1, (end_index - q))
-
-    def quicksort_helper(self, arr):
-        if self.pivot_type == 'first':
-            self.quicksort(arr, 0, len(arr) - 1)
-        elif self.pivot_type == 'last':
-            self.quicksort(arr, len(arr) - 1, len(arr) - 1)
+    def mid_parition(self, arr, left, right):
+        """
+        This is a method to do quick sort using the middle element as the pivot.  The original form of this code is from:
+        http://homepages.math.uic.edu/~leon/cs-mcs401-s08/handouts/quicksort.pdf
+        :param arr:
+        :param left:
+        :param right:
+        :return:
+        """
+        if (left + right) % 2 == 0:
+            mid = int(((left + right) / 2) - 1)
         else:
-            if len(arr) % 2 == 0:
-                self.quicksort(arr, int(len(arr) / 2) - 1, len(arr) - 1, 0, len(arr))
-            else:
-                self.quicksort(arr, int((len(arr) / 2) - 0.5), len(arr) - 1, 0, len(arr))
+            mid = int(((left + right) // 2))
+
+        temp = arr[left]
+        arr[left] = arr[mid]
+        arr[mid] = temp
+
+        pivot = arr[left]
+
+        low = left + 1
+        high = right
+        while low < high:
+            while arr[high] > pivot:
+                high -= 1
+            while low <= high and arr[low] <= pivot:
+                low += 1
+            if low <= high:
+                temp = arr[low]
+                arr[low] = arr[high]
+                arr[high] = temp
+        temp = arr[left]
+        arr[left] = arr[high]
+        arr[high] = temp
+        return high
+
+    def mid_quicksort(self, arr, left, right):
+        """
+        This is a method to parition an list using the middle element as the pivot.  The original form of this code is from:
+        http://homepages.math.uic.edu/~leon/cs-mcs401-s08/handouts/quicksort.pdf
+        :param arr:
+        :param left:
+        :param right:
+        :return:
+        """
+        if left < right:
+            q = self.mid_parition(arr, left, right)
+            self.mid_quicksort(arr, left, q - 1)
+            self.count += ((right - left) - 1)
+            self.mid_quicksort(arr, q + 1, right)
+            self.count += ((right - left) - 1)
 
     def reset_count(self):
         self.count = 0
 
     def get_count(self):
-        print(self.count)
-
-    def reset_pivot_type(self, new_type):
-        self.pivot_type = new_type
+        print(str(self.count))
